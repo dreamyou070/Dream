@@ -7,6 +7,7 @@ from model_unet import ReconstructiveSubNetwork, DiscriminativeSubNetwork
 from loss import FocalLoss, SSIM
 import os
 import argparse
+
 def get_lr(optimizer):
     for param_group in optimizer.param_groups:
         return param_group['lr']
@@ -67,10 +68,18 @@ def train_on_device(obj_names, args):
                 aug_gray_batch = sample_batched["augmented_image"].cuda()
                 anomaly_mask = sample_batched["anomaly_mask"].cuda()
 
+                # ---------------------------------------------------------------------------------------------------------
                 gray_rec = model(aug_gray_batch)
-                joined_in = torch.cat((gray_rec, aug_gray_batch), dim=1)
+                print(f'reconstruction model input : {aug_gray_batch.shape}')
+                print(f'reconstruction model output : {gray_rec.shape}')
 
+                # ---------------------------------------------------------------------------------------------------------
+                joined_in = torch.cat((gray_rec, aug_gray_batch), dim=1)
+                print(f'concat, discriminative model input : {joined_in.shape}')
                 out_mask = model_seg(joined_in)
+                print(f'discriminative model output : {out_mask.shape}')
+
+
                 out_mask_sm = torch.softmax(out_mask, dim=1)
 
 
