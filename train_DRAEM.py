@@ -73,23 +73,19 @@ def train_on_device(obj_names, args):
 
                 # ---------------------------------------------------------------------------------------------------------
                 gray_rec = model(aug_gray_batch)
-                print(f'reconstruction model input : {aug_gray_batch.shape}')
-                print(f'reconstruction model output : {gray_rec.shape}')
-
-                # ---------------------------------------------------------------------------------------------------------
                 joined_in = torch.cat((gray_rec, aug_gray_batch), dim=1)
-                print(f'concat, discriminative model input : {joined_in.shape}')
-                out_mask = model_seg(joined_in) # [1,4,64,64]
-                print(f'discriminative model output : {out_mask.shape}')
 
 
-                out_mask_sm = torch.softmax(out_mask, dim=1)
                 l2_loss = loss_l2(gray_rec, gray_batch)
-
                 ssim_loss = loss_ssim(gray_rec, gray_batch)
 
-                print(f'focal loss input : {out_mask_sm.shape}')
-                print(f'focal loss target : {anomaly_mask.shape}')
+
+
+                out_mask = model_seg(joined_in)  # [1,4,64,64]
+                out_mask_sm = torch.softmax(out_mask, dim=1)
+                print(f'loss_focal input : {out_mask_sm.shape}')
+                print(f'loss_focal output anomaly_mask : {anomaly_mask.shape}')
+
                 segment_loss = loss_focal(out_mask_sm, anomaly_mask)
 
 

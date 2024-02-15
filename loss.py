@@ -34,7 +34,7 @@ class FocalLoss(nn.Module):
     def forward(self, logit, target):
         if self.apply_nonlin is not None:
             logit = self.apply_nonlin(logit)
-        num_class = logit.shape[1]
+        num_class = logit.shape[1] # there are two class
 
         if logit.dim() > 2:
             # N,C,d1,d2 -> N,C,m (m=d1*d2*...)
