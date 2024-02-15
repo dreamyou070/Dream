@@ -41,7 +41,7 @@ def train_on_device(obj_names, args):
         model.apply(weights_init)
 
         print(f' (2.2) segmentation model')
-        model_seg = DiscriminativeSubNetwork(in_channels=6,ut_channels=2)
+        model_seg = DiscriminativeSubNetwork(in_channels=6,out_channels=2)
         model_seg.cuda()
         model_seg.apply(weights_init)
 
@@ -50,8 +50,11 @@ def train_on_device(obj_names, args):
                                       {"params": model_seg.parameters(), "lr": args.lr}])
 
         scheduler = optim.lr_scheduler.MultiStepLR(optimizer,[args.epochs*0.8,args.epochs*0.9],gamma=0.2, last_epoch=-1)
+        # reconstruction loss
         loss_l2 = torch.nn.modules.loss.MSELoss()
         loss_ssim = SSIM()
+
+        # segmentation loss
         loss_focal = FocalLoss()
 
         print(f' (2.4) dataset')
