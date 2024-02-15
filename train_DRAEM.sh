@@ -5,6 +5,6 @@ python train_DRAEM.py \
  --bs 8 \
  --epochs 700 \
  --data_path ../../MyData/anomaly_detection/MVTec \
- --anomaly_source_path /home/dreamyou070/MyData/anomaly_detection/MVTec3D-AD/anomal_source \
+ --anomaly_source_path ../../MyData/anomaly_detection/MVTec3D-AD/anomal_source/dtd_images \
  --checkpoint_path ./result/ \
  --log_path ./logs/
