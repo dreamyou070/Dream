@@ -91,6 +91,8 @@ def train_on_device(obj_names, args):
                 print(f'focal loss input : {out_mask_sm.shape}')
                 print(f'focal loss target : {anomaly_mask.shape}')
                 segment_loss = loss_focal(out_mask_sm, anomaly_mask)
+
+
                 loss = l2_loss + ssim_loss + segment_loss
 
                 optimizer.zero_grad()
@@ -109,12 +111,8 @@ def train_on_device(obj_names, args):
                     visualizer.visualize_image_batch(gray_rec, n_iter, image_name='batch_recon_out')
                     visualizer.visualize_image_batch(anomaly_mask, n_iter, image_name='mask_target')
                     visualizer.visualize_image_batch(t_mask, n_iter, image_name='mask_out')
-
-
                 n_iter +=1
-
             scheduler.step()
-
             torch.save(model.state_dict(), os.path.join(args.checkpoint_path, run_name+".pckl"))
             torch.save(model_seg.state_dict(), os.path.join(args.checkpoint_path, run_name+"_seg.pckl"))
 
