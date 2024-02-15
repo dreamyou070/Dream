@@ -84,7 +84,7 @@ def train_on_device(obj_names, args):
                 out_mask = model_seg(joined_in)  # [1,4,64,64]
                 out_mask_sm = torch.softmax(out_mask, dim=1)
                 print(f'loss_focal input : {out_mask_sm.shape}')
-                print(f'loss_focal output anomaly_mask : {anomaly_mask.shape}')
+                print(f'loss_focal output anomaly_mask : {anomaly_mask}')
 
                 segment_loss = loss_focal(out_mask_sm, anomaly_mask)
 
