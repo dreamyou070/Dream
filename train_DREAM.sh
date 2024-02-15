@@ -1,4 +1,4 @@
-python train_DREAM.py \
+python train_DRAEM.py \
  --gpu_id 0 \
  --obj_id -1 \
  --lr 0.0001 \
