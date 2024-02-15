@@ -73,8 +73,12 @@ class MVTecDRAEMTrainDataset(Dataset):
         self.root_dir = root_dir
         self.resize_shape=resize_shape
 
-        print(f'root_dir: {root_dir}')
-        self.image_paths = sorted(glob.glob(root_dir+"/*.png"))
+        self.image_paths = []
+        images = os.listdir(root_dir)
+        for img in images :
+            img_dir = os.path.join(root_dir, img)
+            self.image_paths.append(img_dir)
+
         print(f'len(self.image_paths): {len(self.image_paths)}')
 
         self.anomaly_source_paths = sorted(glob.glob(anomaly_source_path+"/*/*.jpg"))
