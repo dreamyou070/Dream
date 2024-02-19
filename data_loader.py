@@ -71,7 +71,13 @@ class MVTecDRAEMTrainDataset(Dataset):
                 on a sample.
         """
         self.root_dir = root_dir
-        self.resize_shape=resize_shape
+
+        self.resize_shape = resize_shape
+
+        print(f'self.resize_shape: {self.resize_shape}')
+        if self.resize_shape is None:
+            self.resize_shape = (256, 256)
+
 
         self.image_paths = []
         images = os.listdir(root_dir)
@@ -80,8 +86,6 @@ class MVTecDRAEMTrainDataset(Dataset):
             self.image_paths.append(img_dir)
 
         self.anomaly_source_paths = sorted(glob.glob(anomaly_source_path+"/*/*.jpg"))
-        print(f'len(self.image_paths): {len(self.image_paths)}')
-        print(f'len(self.anomaly_source_paths): {len(self.anomaly_source_paths)}')
 
         self.augmenters = [iaa.GammaContrast((0.5,2.0),per_channel=True),
                       iaa.MultiplyAndAddToBrightness(mul=(0.8,1.2),add=(-30,30)),
@@ -149,7 +153,8 @@ class MVTecDRAEMTrainDataset(Dataset):
 
     def transform_image(self, image_path, anomaly_source_path):
         image = cv2.imread(image_path)
-        image = cv2.resize(image, dsize=(self.resize_shape[1], self.resize_shape[0]))
+        image = cv2.resize(image,
+                           dsize=(self.resize_shape[1], self.resize_shape[0]))
 
         do_aug_orig = torch.rand(1).numpy()[0] > 0.7
         if do_aug_orig:
@@ -166,7 +171,7 @@ class MVTecDRAEMTrainDataset(Dataset):
         idx = torch.randint(0, len(self.image_paths), (1,)).item()
         anomaly_source_idx = torch.randint(0, len(self.anomaly_source_paths), (1,)).item()
         image, augmented_image, anomaly_mask, has_anomaly = self.transform_image(self.image_paths[idx],
-                                                                           self.anomaly_source_paths[anomaly_source_idx])
+                                                                                 self.anomaly_source_paths[anomaly_source_idx])
         sample = {'image': image, "anomaly_mask": anomaly_mask,
                   'augmented_image': augmented_image, 'has_anomaly': has_anomaly, 'idx': idx}
 

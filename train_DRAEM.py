@@ -60,7 +60,7 @@ def train_on_device(obj_names, args):
         print(f' (2.4) dataset')
         dataset = MVTecDRAEMTrainDataset(os.path.join(args.data_path , f"{obj_name}/train/good/"),
                                          args.anomaly_source_path,
-                                         resize_shape=[256, 256])
+                                         resize_shape=[256, 256]) # 256
         dataloader = DataLoader(dataset, batch_size=args.bs,shuffle=True, num_workers=16)
 
         n_iter = 0
@@ -75,12 +75,10 @@ def train_on_device(obj_names, args):
                 # ---------------------------------------------------------------------------------------------------------
                 gray_rec = model(aug_gray_batch)
                 joined_in = torch.cat((gray_rec, aug_gray_batch), dim=1)
-                # [1.1] reconstruction : l2 loss
                 l2_loss = loss_l2(gray_rec, gray_batch)
-                # [1.2] reconstruction : ssim loss
                 ssim_loss = loss_ssim(gray_rec, gray_batch)
 
-
+                # ---------------------------------------------------------------------------------------------------------
                 out_mask = model_seg(joined_in)  # [1,4,64,64]
                 out_mask_sm = torch.softmax(out_mask, dim=1)
                 print(f'loss_focal input : {out_mask_sm.shape}')
