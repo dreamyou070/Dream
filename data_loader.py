@@ -74,11 +74,6 @@ class MVTecDRAEMTrainDataset(Dataset):
 
         self.resize_shape = resize_shape
 
-        print(f'self.resize_shape: {self.resize_shape}')
-        if self.resize_shape is None:
-            self.resize_shape = (256, 256)
-
-
         self.image_paths = []
         images = os.listdir(root_dir)
         for img in images :
@@ -153,8 +148,10 @@ class MVTecDRAEMTrainDataset(Dataset):
 
     def transform_image(self, image_path, anomaly_source_path):
         image = cv2.imread(image_path)
+        print(f'image before resize : {image}')
         image = cv2.resize(image,
                            dsize=(self.resize_shape[1], self.resize_shape[0]))
+
 
         do_aug_orig = torch.rand(1).numpy()[0] > 0.7
         if do_aug_orig:
