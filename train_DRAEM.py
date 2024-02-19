@@ -86,7 +86,8 @@ def train_on_device(obj_names, args):
                 print(f'loss_focal input : {out_mask_sm.shape}')
                 print(f'loss_focal output anomaly_mask : {anomaly_mask}')
 
-                segment_loss = loss_focal(out_mask_sm, anomaly_mask)
+                segment_loss = loss_focal(out_mask_sm,
+                                          anomaly_mask)
 
 
                 loss = l2_loss + ssim_loss + segment_loss
