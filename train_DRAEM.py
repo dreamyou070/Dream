@@ -70,15 +70,15 @@ def train_on_device(obj_names, args):
                 gray_batch = sample_batched["image"].cuda()
                 aug_gray_batch = sample_batched["augmented_image"].cuda()
                 anomaly_mask = sample_batched["anomaly_mask"].cuda()
+                print(f'anomaly_mask : {anomaly_mask}')
 
                 # ---------------------------------------------------------------------------------------------------------
                 gray_rec = model(aug_gray_batch)
                 joined_in = torch.cat((gray_rec, aug_gray_batch), dim=1)
-
-
+                # [1.1] reconstruction : l2 loss
                 l2_loss = loss_l2(gray_rec, gray_batch)
+                # [1.2] reconstruction : ssim loss
                 ssim_loss = loss_ssim(gray_rec, gray_batch)
-
 
 
                 out_mask = model_seg(joined_in)  # [1,4,64,64]
